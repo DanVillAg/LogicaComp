@@ -44,8 +44,30 @@ puntoMedio (x1 , y1) (x2 , y2) = ( (x1 + ((abs(x1 - x2))/2)), (y1 + ((abs(y1 - y
 
 --Función que dada una ecuación de segundo grado encuentra las raices de esta en una
 --pareja ordenada
+--Prelude>raices 5 9 3
 raices :: Float -> Float -> Float -> (Complejo,Complejo)
-raices = error "Te toca"
+raices a b c = (Normal(x1, i1), Normal(x2, i2))
+    where d = b * b - 4 * a * c
+          e = (- b) / (2 * a)
+          rootD = sqrt (abs(d))
+          x1 = 
+            if d < 0
+            then e 
+            else e + (rootD / (2 * a))
+          x2 = 
+            if d < 0
+            then e 
+            else e - (rootD / (2 * a))
+          i1 = 
+            if d < 0
+            then rootD
+            else 0
+          i2 = 
+            if d < 0
+            then -rootD   
+            else 0
+            
+    
 
 --Definir la función segmento tal que (segmento m n xs) es la lista de los
 --elementos de xs comprendidos entre las posiciones m y n. Por ejemplo,
