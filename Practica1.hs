@@ -75,14 +75,14 @@ raices a b c = (Normal(x1, i1), Normal(x2, i2))
 --segmento 3 5 [3,4,1,2,7,9,0] == [1,2,7]
 --segmento 5 3 [3,4,1,2,7,9,0] == []
 segmento :: Int -> Int -> [a] -> [a]
-segmento = error "Te toca"
+segmento m n xs = take (n-m+1) (drop (m-1) xs) 
 
 
 --Definir la función extremos tal que (extremos n xs) es la lista formada
 --por los n primeros elementos de xs y los n finales elementos de xs. Por ejemplo,
 --extremos 3 [2,6,7,1,2,4,5,8,9,2,3] == [2,6,7,9,2,3]
 extremos :: Int -> [a] -> [a]
-extremos = error "Te toca"
+extremos n xs = take n xs ++ drop ((length xs) - n) xs
 
 
 --Funcion que elimina un intervalo de una lista; dados dos números y una lista,
@@ -90,7 +90,7 @@ extremos = error "Te toca"
 --Por ejemplo,
 --dIntervalos 2 4 [1,2,3,4,5,6,7] == [1,5,6,7]
 dIntervalos :: Int -> Int -> [a] -> [a]
-dIntervalos = error "Te toca"
+dIntervalos m n xs = take (m-1) xs ++ drop n xs
 
 
 --Un número natural n se denomina abundante si es menor que la suma de sus divisores
