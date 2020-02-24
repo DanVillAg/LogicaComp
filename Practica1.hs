@@ -17,7 +17,10 @@ module Practica1 where
 
 import Data.Char()
 
+---------------------
 -- Tipos definidos --
+---------------------
+
 
 --Definir el tipo Complejo
 newtype Complejo = Normal (Float, Float) deriving(Show, Eq)
@@ -37,7 +40,10 @@ data Lista a = Nula | Cons a (Lista a) deriving(Show,Eq)
 data Arbol = Vacio | Nodo Arbol Int Arbol deriving(Show,Eq)
 
 
+---------------------------
 -- Funciones principales --
+---------------------------
+
 
 --Funcion puntoMedio que dados dos puntos en el plano encuentra el punto medio entre los dos.
 --Ejemplo
@@ -105,7 +111,7 @@ dIntervalos m n xs = take (m-1) xs ++ drop n xs
 numerosAbundantes :: Int -> [Int]
 numerosAbundantes 0 = []
 numerosAbundantes n
-  | sum(divisores n) >= n = n : numerosAbundantes (n - 1)
+  | sum(divisores n) > n = n : numerosAbundantes (n - 1)
   | sum(divisores n) < n = numerosAbundantes (n - 1)
 
 
@@ -142,12 +148,15 @@ primitivo n
 --sipLis (Suc (Suc Cero)) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 Nula))))) (Cons 7 (Cons 8 (Cons 9 Nula))) ==
 --(Cons 2 (Cons 8 (Cons 3 (Cons 9 Nula))))
 sipLis :: Nat -> Lista a -> Lista a -> Lista a
-sipLis Cero _ s = s
-sipLis Cero x _ = x
-sipLis Cero x s = x:s
-sipLis n x s = auxSipLis (count n) x s
+sipLis _ Nula _ = Nula
+sipLis _ _ Nula = Nula
+sipLis (Suc i) xs ys = conc (dropLista i xs) (dropLista i ys)
 
+
+-------------------------------------------------------
 -- Funciones auxiliares en caso de tenerlas van aquí --
+-------------------------------------------------------
+
 
 --Función que devuelve una lista de los divisores de un número
 divisores :: Int -> [Int]
@@ -165,13 +174,19 @@ auxPrimitivos :: Integer -> [Integer] -> Integer
 auxPrimitivos 1 [n] = n
 auxPrimitivos _ n = auxPrimitivos (fromIntegral length (digitos (fromIntegral product n))) (product (fromIntegral digitos n))
 
+--Función que convierte una sucesión de naturales en un entero
 count :: Nat -> Int
 count Cero = 0
-count (x:xs) = 1 + count xs 
+count (Suc j) = 1 + count j 
 
-auxSipLis :: Int -> Lista a -> Lista a -> Lista a
-auxSipLis 0 n m = n:m
-auxSipLis x n m 
-  | x >= 1 = drop x n : drop x m 
+--Función que concatena dos Lista
+conc :: Lista a -> Lista a -> Lista a
+conc Nula _ = Nula
+conc _ Nula = Nula
+conc (Cons x xs) (Cons y ys) = Cons x (Cons y (conc xs ys))
 
---Suerte y no olviden seguir los lineamientos de entrega.
+--Función que hace drop en el índice recibido de una Lista
+dropLista :: Nat -> Lista a -> Lista a
+dropLista _ Nula = Nula
+dropLista Cero l = l
+dropLista (Suc i) (Cons x xs) = dropLista i xs
