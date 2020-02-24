@@ -142,8 +142,8 @@ primitivo n
 --sipLis (Suc (Suc Cero)) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 Nula))))) (Cons 7 (Cons 8 (Cons 9 Nula))) ==
 --(Cons 2 (Cons 8 (Cons 3 (Cons 9 Nula))))
 sipLis :: Nat -> Lista a -> Lista a -> Lista a
-sipLis Cero [] s = s
-sipLis Cero x [] = x
+sipLis Cero _ s = s
+sipLis Cero x _ = x
 sipLis Cero x s = x:s
 sipLis n x s = auxSipLis (count n) x s
 
