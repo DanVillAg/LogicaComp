@@ -138,7 +138,7 @@ primitivo :: Integer -> Integer
 primitivo n
   | n <= 0 = error "No existen los primitivos del cero o negativos"
   | n < 10 = n
-  | n > 9 = auxPrimitivos (fromIntegral length (digitos n)) (fromIntegral digitos n)
+  | n > 9 = auxPrimitivos (toInteger (length (digitos n))) (fromIntegral (digitos n))
 
 
 --Función que dadas dos listas y un Natural j, regresa una lista tal que, se encuentran 
@@ -163,7 +163,7 @@ divisores :: Int -> [Int]
 divisores n = filter ((0 ==) . (n `mod`)) [1 .. (n `div` 2)]
 
 --Función que devuelve una lista de digitos a partir de un número
-digitos :: Int -> [Int]
+digitos :: Integer -> [Int]
 digitos 0 = []
 digitos n = map (\x -> read [x] :: Int) (show n)
 
@@ -176,7 +176,7 @@ digs x = digs (x `div` 10) ++ [x `mod` 10]
 -- iniciales lo componían 
 auxPrimitivos :: Integer -> [Integer] -> Integer
 auxPrimitivos 1 [n] = n
-auxPrimitivos _ n = auxPrimitivos (fromIntegral length (digitos (fromIntegral product n))) (product (fromIntegral digitos n))
+auxPrimitivos _ n = auxPrimitivos (toInteger (length (digitos (product n)))) (toInteger digitos n)
 
 --Función que convierte una sucesión de naturales en un entero
 count :: Nat -> Int
