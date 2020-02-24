@@ -142,9 +142,10 @@ primitivo n
 --sipLis (Suc (Suc Cero)) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 Nula))))) (Cons 7 (Cons 8 (Cons 9 Nula))) ==
 --(Cons 2 (Cons 8 (Cons 3 (Cons 9 Nula))))
 sipLis :: Nat -> Lista a -> Lista a -> Lista a
-sipLis = error "Te toca"
-
-
+sipLis Cero [] s = s
+sipLis Cero x [] = x
+sipLis Cero x s = x:s
+sipLis n x s = auxSipLis (count n) x s
 
 -- Funciones auxiliares en caso de tenerlas van aquí --
 
@@ -164,5 +165,13 @@ auxPrimitivos :: Integer -> [Integer] -> Integer
 auxPrimitivos 1 [n] = n
 auxPrimitivos _ n = auxPrimitivos (fromIntegral length (digitos (fromIntegral product n))) (product (fromIntegral digitos n))
 
+count :: Nat -> Int
+count Cero = 0
+count (x:xs) = 1 + count xs 
+
+auxSipLis :: Int -> Lista a -> Lista a -> Lista a
+auxSipLis 0 n m = n:m
+auxSipLis x n m 
+  | x >= 1 = drop x n : drop x m 
 
 --Suerte y no olviden seguir los lineamientos de entrega.
