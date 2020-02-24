@@ -5,7 +5,7 @@
 
 - Alumno: Daniel Villegas Aguilar
 - Número de cuenta: 417047238
-- Correo:
+- Correo:daniel_villegas@ciencias.unam.mx
 
 - Alumno: Diego Alfredo Villalpando Velázquez
 - Número de cuenta: 313616198
@@ -166,6 +166,10 @@ divisores n = filter ((0 ==) . (n `mod`)) [1 .. (n `div` 2)]
 digitos :: Int -> [Int]
 digitos 0 = []
 digitos n = map (\x -> read [x] :: Int) (show n)
+
+digs :: Integral x => x -> [x]
+digs 0 = []
+digs x = digs (x `div` 10) ++ [x `mod` 10]
 
 --Función que devuelve el producto de una lista de números llevando la cuenta de los digitos
 -- del resultado recursivamente, hasta devolver el primitivo del número de cuya lista de numeros
