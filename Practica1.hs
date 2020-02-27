@@ -1,21 +1,29 @@
 {-
 - Lógica computacional 2020-2
 - Practica 1
+- 24 febrero 2020
+
 - Alumno: Daniel Villegas Aguilar
 - Número de cuenta: 417047238
--Correo: 
-- Alumno:
-- Número de cuenta:  
--Correo: 
+- Correo:
+
+- Alumno: Diego Alfredo Villalpando Velázquez
+- Número de cuenta: 313616198
+- Correo: diego.a.villalpando@ciencias.unam.mx
 -}
+
 
 module Practica1 where
 
--- Tipos definidos
+import Data.Char()
+
+---------------------
+-- Tipos definidos --
+---------------------
+
 
 --Definir el tipo Complejo
---Te toca
-data Complejo = Normal (Float, Float) deriving(Show,Eq)
+newtype Complejo = Normal (Float, Float) deriving(Show, Eq)
 
 --Forma para definir el tipo de los números naturales
 --de manera recursiva iniciando desde el cero.
@@ -32,20 +40,44 @@ data Lista a = Nula | Cons a (Lista a) deriving(Show,Eq)
 data Arbol = Vacio | Nodo Arbol Int Arbol deriving(Show,Eq)
 
 
--- Funciones principales
+---------------------------
+-- Funciones principales --
+---------------------------
+
 
 --Funcion puntoMedio que dados dos puntos en el plano encuentra el punto medio entre los dos.
 --Ejemplo
 --Prelude>puntoMedio (-1,2) (7,6)
 --(3.0,4.0)
 puntoMedio :: (Float,Float) -> (Float,Float) -> (Float,Float)
-puntoMedio (x1 , y1) (x2 , y2) = ( (x1 + ((abs(x1 - x2))/2)), (y1 + ((abs(y1 - y2))/2)) )
+puntoMedio (x1 , y1) (x2 , y2) = (x1 + (abs (x1 - x2) / 2), y1 + (abs (y1 - y2) / 2))
 
 
 --Función que dada una ecuación de segundo grado encuentra las raices de esta en una
 --pareja ordenada
+--Prelude>raices 5 9 3
 raices :: Float -> Float -> Float -> (Complejo,Complejo)
-raices = error "Te toca"
+raices a b c = (Normal(x1, i1), Normal(x2, i2))
+    where d = b * b - 4 * a * c
+          e = (- b) / (2 * a)
+          rootD = sqrt (abs d)
+          x1 = 
+            if d < 0
+            then e 
+            else e + (rootD / (2 * a))
+          x2 = 
+            if d < 0
+            then e 
+            else e - (rootD / (2 * a))
+          i1 = 
+            if d < 0
+            then rootD
+            else 0
+          i2 = 
+            if d < 0
+            then -rootD   
+            else 0
+    
 
 --Definir la función segmento tal que (segmento m n xs) es la lista de los
 --elementos de xs comprendidos entre las posiciones m y n. Por ejemplo,
@@ -53,14 +85,14 @@ raices = error "Te toca"
 --segmento 3 5 [3,4,1,2,7,9,0] == [1,2,7]
 --segmento 5 3 [3,4,1,2,7,9,0] == []
 segmento :: Int -> Int -> [a] -> [a]
-segmento = error "Te toca"
+segmento m n xs = take (n-m+1) (drop (m-1) xs) 
 
 
 --Definir la función extremos tal que (extremos n xs) es la lista formada
 --por los n primeros elementos de xs y los n finales elementos de xs. Por ejemplo,
 --extremos 3 [2,6,7,1,2,4,5,8,9,2,3] == [2,6,7,9,2,3]
 extremos :: Int -> [a] -> [a]
-extremos = error "Te toca"
+extremos n xs = take n xs ++ drop (length xs - n) xs
 
 
 --Funcion que elimina un intervalo de una lista; dados dos números y una lista,
@@ -68,7 +100,7 @@ extremos = error "Te toca"
 --Por ejemplo,
 --dIntervalos 2 4 [1,2,3,4,5,6,7] == [1,5,6,7]
 dIntervalos :: Int -> Int -> [a] -> [a]
-dIntervalos = error "Te toca"
+dIntervalos m n xs = take (m-1) xs ++ drop n xs
 
 
 --Un número natural n se denomina abundante si es menor que la suma de sus divisores
@@ -77,7 +109,10 @@ dIntervalos = error "Te toca"
 --es la lista de números abundantes menores o iguales que n. Por ejemplo,
 --numerosAbundantes 50 == [12,18,20,24,30,36,40,42,48]
 numerosAbundantes :: Int -> [Int]
-numerosAbundantes = error "Te toca"
+numerosAbundantes 0 = []
+numerosAbundantes n
+  | sum(divisores n) > n = n : numerosAbundantes (n - 1)
+  | sum(divisores n) < n = numerosAbundantes (n - 1)
 
 
 --Definir la función que recibe una lista y regrese una lista tal que 
@@ -86,7 +121,8 @@ numerosAbundantes = error "Te toca"
 --Ejemplo:
 --eliminaDuplicados [1,3,1,2,3,2,1] ; [1,3,2]
 eliminaDuplicados :: Eq a => [a] -> [a]
-eliminaDuplicados = error "Te toca"
+eliminaDuplicados [] = []
+eliminaDuplicados (x:xs) = x : eliminaDuplicados (filter (/=x) xs)
 
 
 --Se define el primitivo de un número como sigue:
@@ -99,7 +135,10 @@ eliminaDuplicados = error "Te toca"
 --Ejemplo:
 --primitivo 327 ; 8
 primitivo :: Integer -> Integer
-primitivo = error "Te toca"
+primitivo n
+  | n <= 0 = error "No existen los primitivos del cero o negativos"
+  | n < 10 = n
+  | n > 9 = auxPrimitivos (length (digitos n)) (fromIntegral (digitos n))
 
 
 --Función que dadas dos listas y un Natural j, regresa una lista tal que, se encuentran 
@@ -109,9 +148,45 @@ primitivo = error "Te toca"
 --sipLis (Suc (Suc Cero)) (Cons 1 (Cons 2 (Cons 3 (Cons 4 (Cons 5 Nula))))) (Cons 7 (Cons 8 (Cons 9 Nula))) ==
 --(Cons 2 (Cons 8 (Cons 3 (Cons 9 Nula))))
 sipLis :: Nat -> Lista a -> Lista a -> Lista a
-sipLis = error "Te toca"
+sipLis _ Nula _ = Nula
+sipLis _ _ Nula = Nula
+sipLis (Suc i) xs ys = conc (dropLista i xs) (dropLista i ys)
 
 
--- Funciones auxiliares en caso de tenerlas van aquí
+-------------------------------------------------------
+-- Funciones auxiliares en caso de tenerlas van aquí --
+-------------------------------------------------------
 
---Suerte y no olviden seguir los lineamientos de entrega.
+
+--Función que devuelve una lista de los divisores de un número
+divisores :: Int -> [Int]
+divisores n = filter ((0 ==) . (n `mod`)) [1 .. (n `div` 2)]
+
+--Función que devuelve una lista de digitos a partir de un número
+digitos :: Integer -> [Integer]
+digitos 0 = []
+digitos n = map (\x -> read [x] :: Integer) (show n)
+
+--Función que devuelve el producto de una lista de números llevando la cuenta de los digitos
+-- del resultado recursivamente, hasta devolver el primitivo del número de cuya lista de numeros
+-- iniciales lo componían 
+auxPrimitivos :: Int -> [Integer] -> Integer
+auxPrimitivos 1 [n] = n
+auxPrimitivos _ [n] = auxPrimitivos (length (digitos (product n))) (digitos n)
+
+--Función que convierte una sucesión de naturales en un entero
+count :: Nat -> Int
+count Cero = 0
+count (Suc j) = 1 + count j 
+
+--Función que concatena dos Lista
+conc :: Lista a -> Lista a -> Lista a
+conc Nula _ = Nula
+conc _ Nula = Nula
+conc (Cons x xs) (Cons y ys) = Cons x (Cons y (conc xs ys))
+
+--Función que hace drop en el índice recibido de una Lista
+dropLista :: Nat -> Lista a -> Lista a
+dropLista _ Nula = Nula
+dropLista Cero l = l
+dropLista (Suc i) (Cons x xs) = dropLista i xs
