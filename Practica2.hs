@@ -1,9 +1,9 @@
 {-
 - Lógica computacional 2020-2
 - Practica 2
-- Alumno: 
-- Número de cuenta: 
--Correo: 
+- Alumno: Daniel Villega Aguilar
+- Número de cuenta: 417047238
+-Correo: daniel_villegas@cienacias.unam.mx
 - Alumno:
 - Número de cuenta:  
 -Correo: 
@@ -62,7 +62,12 @@ u = Var "u"
 -- ---------------------------------------------------------------------
 
 variables :: Prop -> Estado
-variables =  error "Te toca"
+variables (Var x) = [x]
+variables (Neg x) = variables x 
+variables (Disy x y) = rmdups $ variables x ++ variables y
+variables (Conj x y) = rmdups $ variables x ++ variables y
+variables (Impl x y) = rmdups $ variables x ++ variables y
+variables (Equi x y) = rmdups $ variables x ++ variables y
 
 -- ---------------------------------------------------------------------
 -- Ejercicio 2: Definir la función
@@ -198,3 +203,10 @@ esInsatisfacible = error "Te toca"
 
 esSatisfacible :: Prop -> Bool
 esSatisfacible = error "Te toca"
+
+-- ---------------------------------------------------------------------
+-- Funciones auxiliares
+-- Función que toma una lista y remueve los elementos duplicados
+rmdups :: Eq a => [a] -> [a]
+rmdups []     = []
+rmdups (x:xs) = x : filter (/= x) (rmdups xs)
