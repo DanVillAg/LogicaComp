@@ -138,7 +138,7 @@ estadosPosibles (Equi x y) = conjPotencia (variables (Equi x y))
 -- ---------------------------------------------------------------------
 
 tautologia :: Prop -> Bool
-tautologia = error "Te toca"
+tautologia x = and [interpretacion x s | s <- estadosPosibles x]
 
 
 -- ---------------------------------------------------------------------
@@ -151,7 +151,7 @@ tautologia = error "Te toca"
 -- ---------------------------------------------------------------------
 
 contradiccion :: Prop -> Bool
-contradiccion = error "Te toca"
+contradiccion x = not (and [interpretacion x s | s <- estadosPosibles x])
 
 
 -- ---------------------------------------------------------------------
