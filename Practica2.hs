@@ -177,9 +177,13 @@ esModelo xs x = interpretacion x xs && True
 -- >modelos (Conj (Disy p q) (Disy (Neg q) r))
 -- [["p","q","r"],["p","r"],["p"],["q","r"]]
 -- ---------------------------------------------------------------------
-
+--[x: ps | ps <- (conjPotencia xs)] ++ conjPotencia xs
 modelos :: Prop -> [Estado]
-modelos = error "Te toca"
+modelos (Var x) = filter (\z -> (esModelo z (Var x)) )  (estadosPosibles (Var x))
+modelos (Neg x) = filter (\z -> (esModelo z (Neg x)) ) (estadosPosibles (Neg x))
+modelos (Conj x y) = filter (\z -> (esModelo z (Conj x y)) ) (estadosPosibles (Disy x y))
+modelos (Impl x y) = filter (\z -> (esModelo z (Impl x y)) ) (estadosPosibles (Impl x y))
+modelos (Equi x y) = filter (\z -> (esModelo z (Equi x y)) ) (estadosPosibles (Equi x y))
 
 -- ---------------------------------------------------------------------
 -- Ejercicio 9: Definir una función que dada una fórmula proposicional f
