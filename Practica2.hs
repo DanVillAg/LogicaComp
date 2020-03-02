@@ -84,7 +84,7 @@ variables (Equi x y) = rmdups $ variables x ++ variables y
 
 conjPotencia :: [a] -> [[a]]
 conjPotencia [] = [[]]
-conjPotencia (x:xs) = [concAdd x (conjPotencia xs ++ conjPotencia xs)]
+conjPotencia (x:xs) = [x: ps | ps <- (conjPotencia xs)] ++ conjPotencia xs
 
 -- ---------------------------------------------------------------------
 -- Interpretaciones --
@@ -119,12 +119,13 @@ interpretacion (Equi x y) xs =  interpretacion (Impl x y) xs && interpretacion (
 -- ---------------------------------------------------------------------
 
 estadosPosibles :: Prop -> [Estado]
-estadosPosibles (Var x) = [x]
-estadosPosibles (Neg x) = [x]
-estadosPosibles (Conj xs ys) = estadosPosibles xs ++ estadosPosibles ys
-estadosPosibles (Disy xs ys) = estadosPosibles xs ++ estadosPosibles ys
-estadosPosibles (Impl xs ys) = estadosPosibles xs ++ estadosPosibles ys
-estadosPosibles (Equi xs ys) = estadosPosibles xs ++ estadosPosibles ys
+estadosPosibles (Var x) = conjPotencia [x]
+estadosPosibles (Neg x) = conjPotencia (variables x)
+estadosPosibles (Conj x y) = conjPotencia (variables (Conj x y))
+estadosPosibles (Disy x y) = conjPotencia (variables (Disy x y))
+estadosPosibles (Impl x y) = conjPotencia (variables (Impl x y))
+estadosPosibles (Equi x y) = conjPotencia (variables (Equi x y))
+
 
 
 -- ---------------------------------------------------------------------
@@ -150,7 +151,7 @@ tautologia = error "Te toca"
 -- ---------------------------------------------------------------------
 
 contradiccion :: Prop -> Bool
-contradiccion = error "Te Toca"
+contradiccion = error "Te toca"
 
 
 -- ---------------------------------------------------------------------
@@ -226,6 +227,6 @@ rmdups []     = []
 rmdups (x:xs) = x : filter (/= x) (rmdups xs)
 
 --Función que realiza el producto cruz recursivo de las partes una prop y un conjunto
-concAdd :: a -> [a] -> [a]
-concAdd _ [] = []
-concAdd x (y:ys) = (x:y) : concAdd x ys
+--concAdd :: a -> [a] -> [a]
+--concAdd x [] = []
+--concAdd x ys = map (\ y -> x : y) ys
