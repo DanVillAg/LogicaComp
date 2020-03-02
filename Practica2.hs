@@ -161,7 +161,7 @@ contradiccion = error "Te toca"
 -- ---------------------------------------------------------------------
 
 esModelo :: Estado -> Prop -> Bool
-esModelo = error "Te toca"
+esModelo xs x = (interpretacion (x) xs) && True
 
 -- ---------------------------------------------------------------------
 -- Ejercicio 8: Definir una función que dada una fórmula proposicional
