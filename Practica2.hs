@@ -84,7 +84,7 @@ variables (Equi x y) = rmdups $ variables x ++ variables y
 
 conjPotencia :: [a] -> [[a]]
 conjPotencia [] = [[]]
-conjPotencia (x:xs) = concAdd x (conjPotencia xs) ++ conjPotencia xs
+conjPotencia (x:xs) = [concAdd x (conjPotencia xs ++ conjPotencia xs)]
 
 -- ---------------------------------------------------------------------
 -- Interpretaciones --
@@ -119,26 +119,12 @@ interpretacion (Equi x y) xs =  interpretacion (Impl x y) xs && interpretacion (
 -- ---------------------------------------------------------------------
 
 estadosPosibles :: Prop -> [Estado]
-estadosPosibles Var x = [x]
-estadosPosibles Neg x = [x]
-estadosPosibles Conj (Var x) (Var y) = [x] : [y]
-estadosPosibles Disy (Var x) (Var y) = [x] : [y]
-estadosPosibles Impl (Var x) (Var y) = [x] : [y]
-estadosPosibles Equi (Var x) (Var y) = [x] : [y]
-estadosPosibles (Var x) xs = [x] : estadosPosibles xs
-estadosPosibles (Neg x) xs = [x] : estadosPosibles xs
-estadosPosibles Conj (Var x) ys = [x] : estadosPosibles ys
-estadosPosibles Disy (Var x) ys = [x] : estadosPosibles ys
-estadosPosibles Impl (Var x) ys = [x] : estadosPosibles ys
-estadosPosibles Equi (Var x) ys = [x] : estadosPosibles ys
-estadosPosibles Conj xs (Var y) = estadosPosibles xs : [y]
-estadosPosibles Disy xs (Var y) = estadosPosibles xs : [y]
-estadosPosibles Impl xs (Var y) = estadosPosibles xs : [y]
-estadosPosibles Equi xs (Var y) = estadosPosibles xs : [y]
-estadosPosibles Conj xs ys = estadosPosibles xs : estadosPosibles ys
-estadosPosibles Disy xs ys = estadosPosibles xs : estadosPosibles ys
-estadosPosibles Impl xs ys = estadosPosibles xs : estadosPosibles ys
-estadosPosibles Equi xs ys = estadosPosibles xs : estadosPosibles ys
+estadosPosibles (Var x) = [x]
+estadosPosibles (Neg x) = [x]
+estadosPosibles (Conj xs ys) = estadosPosibles xs ++ estadosPosibles ys
+estadosPosibles (Disy xs ys) = estadosPosibles xs ++ estadosPosibles ys
+estadosPosibles (Impl xs ys) = estadosPosibles xs ++ estadosPosibles ys
+estadosPosibles (Equi xs ys) = estadosPosibles xs ++ estadosPosibles ys
 
 
 -- ---------------------------------------------------------------------
@@ -164,7 +150,7 @@ tautologia = error "Te toca"
 -- ---------------------------------------------------------------------
 
 contradiccion :: Prop -> Bool
-contradiccion = error "Te toca"
+contradiccion = error "Te Toca"
 
 
 -- ---------------------------------------------------------------------
@@ -241,5 +227,5 @@ rmdups (x:xs) = x : filter (/= x) (rmdups xs)
 
 --Función que realiza el producto cruz recursivo de las partes una prop y un conjunto
 concAdd :: a -> [a] -> [a]
-concAdd x [] = []
-concAdd x ys = map (\ y -> x : y) ys
+concAdd _ [] = []
+concAdd x (y:ys) = (x:y) : concAdd x ys
