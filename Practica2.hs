@@ -197,7 +197,7 @@ modelos (Equi x y) = filter (\z -> (esModelo z (Equi x y)) ) (estadosPosibles (E
 -- ---------------------------------------------------------------------
 
 esValida :: Prop -> Bool
-esValida = error "Te toca"
+esValida x = tautologia x
 
 -- ---------------------------------------------------------------------
 -- Ejercicio 10: Definir una función que dada una fórmula proposicional f
@@ -209,7 +209,7 @@ esValida = error "Te toca"
 -- ---------------------------------------------------------------------
 
 esInsatisfacible :: Prop -> Bool
-esInsatisfacible = error "Te toca"
+esInsatisfacible x = null (modelos x)
 
 -- ---------------------------------------------------------------------
 -- Ejercicio 11: Definir una función que dada una fórmula proposicional f
@@ -221,7 +221,7 @@ esInsatisfacible = error "Te toca"
 -- ---------------------------------------------------------------------
 
 esSatisfacible :: Prop -> Bool
-esSatisfacible = error "Te toca"
+esSatisfacible x = not (null (modelos x))
 
 -- ---------------------------------------------------------------------
 -- Funciones auxiliares
