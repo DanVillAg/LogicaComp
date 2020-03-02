@@ -103,12 +103,12 @@ conjPotencia (x:xs) = concAdd x (conjPotencia xs) ++ conjPotencia xs
 --eg: elem 1 [1,2,3] -> True
 
 interpretacion :: Prop -> Estado -> Bool
-interpretacion (Var x) xs = elem x xs
+interpretacion (Var x) xs = x `elem` xs
 interpretacion (Neg x) xs = not (interpretacion x xs)
 interpretacion (Disy x y) xs =  interpretacion x xs || interpretacion y xs
 interpretacion (Conj x y) xs =  interpretacion x xs && interpretacion y xs
 interpretacion (Impl x y) xs =  not(interpretacion x xs) || interpretacion y xs
-interpretacion (Equi x y) xs =  (interpretacion (Impl x y) xs) && (interpretacion (Impl y x) xs)
+interpretacion (Equi x y) xs =  interpretacion (Impl x y) xs && interpretacion (Impl y x) xs
 
 -- ---------------------------------------------------------------------
 -- Ejercicio 4: Definir una función que dada una fórmula proposicional,
@@ -181,7 +181,7 @@ contradiccion = error "Te toca"
 -- ---------------------------------------------------------------------
 
 esModelo :: Estado -> Prop -> Bool
-esModelo xs x = (interpretacion (x) xs) && True
+esModelo xs x = interpretacion x xs && True
 
 -- ---------------------------------------------------------------------
 -- Ejercicio 8: Definir una función que dada una fórmula proposicional
