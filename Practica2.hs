@@ -98,8 +98,16 @@ conjPotencia = error "Te toca"
 -- True
 -- ---------------------------------------------------------------------
 
+--función elem toma como parámatro un elemento y una list y retorna un booleano si el elemento se encuentra contenigo
+--eg: elem 1 [1,2,3] -> True
+
 interpretacion :: Prop -> Estado -> Bool
-interpretacion = error "Te toca"
+interpretacion (Var x) xs = elem x xs
+interpretacion (Neg x) xs = not (interpretacion x xs)
+interpretacion (Disy x y) xs =  interpretacion x xs || interpretacion y xs
+interpretacion (Conj x y) xs =  interpretacion x xs && interpretacion y xs
+interpretacion (Impl x y) xs =  not(interpretacion x xs) || interpretacion y xs
+interpretacion (Equi x y) xs =  (interpretacion (Impl x y) xs) && (interpretacion (Impl y x) xs)
 
 -- ---------------------------------------------------------------------
 -- Ejercicio 4: Definir una función que dada una fórmula proposicional,
