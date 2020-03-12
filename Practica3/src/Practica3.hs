@@ -19,6 +19,7 @@ module Practica3
     elimImp,
     meteNeg,
     dist,
+    cnf,
     unit,
     red,
     split,
@@ -77,6 +78,10 @@ meteNeg f = error ""
 dist :: Formula -> Formula
 dist f = error ""
 
+-- | Función que convierte una fórmula a forma normal conjuntiva.
+cnf :: Formula -> Formula
+cnf f = error ""
+
 -- | Función que dada una Solucion regresa otra Solucion siguiendo la regla de
 --  la cláusula unitaria, en otro caso regresa la Solucion de entrada.
 unit :: Solucion -> Solucion
@@ -102,3 +107,20 @@ conflict s = error ""
 --  causulas, regresa False en otro caso.
 success :: Solucion -> Bool
 success s = error ""
+
+-- ----------------------------------------------------------------------------
+-- Funciones auxiliares
+-------------------------------------------------------------------------------
+
+-- | Función que dada una fórmula dada regresa una fórmula sin dobles 
+--  negaciones.
+elimDoNeg :: Formula -> Formula
+elimDoNeg f = error ""
+
+-- | Función que convierte una fórmula a forma normal negativa.
+cnn :: Formula -> Formula
+cnn f = error ""
+
+-- |Función que para una Literal dada regresa su contraria.
+litContraria :: Literal -> Literal
+litContraria p = error ""
