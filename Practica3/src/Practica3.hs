@@ -27,8 +27,6 @@ module Practica3
     success
 ) where
 
-import Practica2
-{-
 data Prop = T | F | Var String | Neg Prop | Conj Prop Prop | Disy Prop Prop | Impl Prop Prop | Equi Prop Prop deriving Eq
 
 type Estado = [String]
@@ -50,7 +48,6 @@ r = Var "r"
 s = Var "s"
 t = Var "t"
 u = Var "u"
--}
 
 -- ----------------------------------------------------------------------------
 --Para representar de manera más cómoda las fórmulas, cláusulas y modelos se 
@@ -63,14 +60,22 @@ type Modelo = [Literal]
 type Solucion = (Modelo, Formula)
 
 -- | Función que elimina equivalencias una fórmula.
-elimEquiv :: Formula -> Formula
-elimEquiv f = error ""
+elimEquiv :: Clausula -> Clausula
+elimEquiv [Equi p q] = [Disy (Conj p q) (Conj ((Neg p)) (Neg q))]
+elimEquiv (x:xs)
+    | x == Equi p q = [elimEquiv x : elimEquiv xs]
+    | x /= Equi p q = [x : elimEquiv xs]
+elimEquiv [(x:xs):xss] = [elimEquiv (x:xs) : elimEquiv xss]
 
 -- | Función que elimina implicaciones una fórmula.
-elimImp :: Formula -> Formula
-elimImp f = error ""
+elimImp :: Clausula -> Clausula
+elimImp [Impl p q] = [Disy (Neg p) (Neg q)]
+elimImp (x:xs)
+    | x == Impl p q = [elimImp x : elimImp xs]
+    | x /= Impl p q = [x : elimImp xs]
+elimImp [(x:xs):xss] = [elimImp (x:xs) : elimImp xss]
 
--- | Función que mete negaciones una fórmula.
+-- | Función que mete negaciones en una fórmula.
 meteNeg :: Formula -> Formula
 meteNeg f = error ""
 
@@ -112,10 +117,23 @@ success s = error ""
 -- Funciones auxiliares
 -------------------------------------------------------------------------------
 
+-- |Función que dada una fórmula con una negación de proposiciones, regresa la
+--  negación de cada proposición
+elimNeg :: Clausula -> Clausula
+elimNeg [Neg (Conj p q)] = [Disy (Neg p) (Neg q)]
+elimNeg [Neg (Disy p q)] = [Conj (Neg p) (Neg q)]
+elimNeg (x:xs)
+    | x == Neg (Conj p q) || x == Neg (Disy p q) = [elimNeg x : elimNeg xs]
+    | otherwise = [x : elimNeg xs]
+
 -- | Función que dada una fórmula dada regresa una fórmula sin dobles 
 --  negaciones.
-elimDoNeg :: Formula -> Formula
-elimDoNeg f = error ""
+elimDoNeg :: Clausula -> Clausula
+elimDoNeg [Neg (Neg p)] = [p]
+elimDoNeg (x:xs)
+    | x == Neg (Neg p) = [p : elimDoNeg xs]
+    | otherwise = [p : elimDoNeg]
+elimDoNeg ((x:xs):xss) = [elimDoNeg (x:xs) : elimDoNeg xss]
 
 -- | Función que convierte una fórmula a forma normal negativa.
 cnn :: Formula -> Formula
