@@ -4,9 +4,9 @@
 
 - Creador: Pedro Juan Salvador Sánchez Pérez
 
-- Alumno: Daniel Villega Aguilar
+- Alumno: Daniel Villegas Aguilar
 - Número de cuenta: 417047238
--Correo: daniel_villegas@cienacias.unam.mx
+-Correo: daniel_villegas@ciencias.unam.mx
 
 - Alumno: Diego Alfredo Villalpando Velázquez
 - Número de cuenta: 313616198
