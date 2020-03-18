@@ -117,6 +117,7 @@ meteNeg TTrue = FFalse
 meteNeg FFalse = TTrue
 meteNeg (V p) = Neg (V p)
 meteNeg (Neg p) = auxMeteNeg p
+meteNeg (Neg (Neg p)) = p
 meteNeg (Conj p q) = Conj (meteNeg p) (meteNeg q)
 meteNeg (Disy p q) = Disy (meteNeg p) (meteNeg q)
 meteNeg (Imp p q) = error "meteNeg(Imp _ _)"
