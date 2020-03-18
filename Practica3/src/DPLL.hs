@@ -50,17 +50,19 @@ red (mod, form) = (mod, (literalReducedInForm (map meteNeg mod) form))
 --  la regla de la separación, si es posible, en otro caso regresa la Solucion
 --  de entrada dentro de una lista.
 split :: Solucion -> [Solucion]
-split (mod, form) = error ""
+split (mod, form) = [(splitMod, form) , (negSplitMod, form)] where
+    splitMod =  literalAddSplitForm mod form
+    negSplitMod = meteNeg (head splitMod) : tail splitMod
 
 -- |Función que para una Solucion dada regresa True si la cláusula vacía se 
 --  encuentra en la fórmula, regresa False en otro caso.
 conflict :: Solucion -> Bool
-conflict s = error ""
+conflict (mod, form) = [] `elem` form
 
 -- |Función que para una Solucion dada regresa True si la fórmula no contiene
 --  causulas, regresa False en otro caso.
 success :: Solucion -> Bool
-success s = error ""
+success (mod, form) = null form
 
 
 -------------------------------------------------------------------------------
@@ -92,3 +94,19 @@ clausWithoutLiteral xs ys = filter (\n -> not (n `elem` xs)) ys
 -- | Función que dada una lista de literales y una fórmula retorna las cláusulas
 --   reducidas sin la literal
 literalReducedInForm xs ys = map (\z -> (clausWithoutLiteral xs z)) ys
+
+------AUXILIARES DE SPLIT--------------
+-- | Función que dada una lista de literales y una clausula retorna la lista con 
+--   la aparicion de la primera literal nueva que se encuentre en la cláusula o 
+--   la misma lista si todas las literales de la cláusula ya son elem. de la lista
+literalAddNewElems xs (y:ys) = if not (y `elem` xs) then y:xs
+                                else (literalAddNewElems xs ys)
+literalAddNewElems xs _      = xs
+
+-- | Función que dada una lista de literales y una formula retorna la lista con 
+--   las apariciones de literales nuevas que se encuentren en la fórmula o la misma
+--   lista si todas las literales de la fórmula ya son elem. de la lista
+literalAddSplitForm xs (y:ys) = if (xs == (literalAddNewElems xs y))
+                                then literalAddSplitForm xs ys
+                                else literalAddNewElems xs y
+literalAddSplitForm xs _      = xs                  
