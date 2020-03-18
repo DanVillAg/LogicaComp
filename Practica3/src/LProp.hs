@@ -113,14 +113,12 @@ elimIE p = elimImp $ elimEquiv p
 -- equivalente pero las negaciones que existen solo aplican a formulas atomicas. tambien elimina la doble negacion. la funcion supone
 -- que la fomula ya no tiene implicaciones ni equivalencias.
 meteNeg :: Prop -> Prop
-meteNeg TTrue = TTrue
-meteNeg FFalse = FFalse
-meteNeg (V p) = V p
-meteNeg (Neg p) = auxMeteNeg p
-meteNeg (Conj p q) = Conj (meteNeg p) (meteNeg q)
-meteNeg (Disy p q) = Disy (meteNeg p) (meteNeg q)
-meteNeg (Imp p q) = Imp (meteNeg p) (meteNeg q)
-meteNeg (Equiv p q) = Equiv (meteNeg p) (meteNeg q)
+meteNeg TTrue = FFalse
+meteNeg FFalse = TTrue
+meteNeg (V p) = Neg (V p)
+meteNeg (Neg p) = p
+meteNeg (Conj p q) = Disy (meteNeg p) (meteNeg q)
+meteNeg (Disy p q) = Conj (meteNeg p) (meteNeg q)
 
 
 -- | funcion que reciba una formula de la logica proposicional y devuelva una formula
@@ -146,19 +144,3 @@ dist (Equiv _ _) = error "dist(Equiv _ _): Fórmula no está en FNN"
 -- equivalente tal que este en forma normal conjuntiva,
 cnf :: Prop -> Prop
 cnf p = dist $ fnn p 
-
--- ----------------------------------------------------------------------------
--- Funciones auxiliares
--- ----------------------------------------------------------------------------
-
--- | Función auxiliar que dada una proposición con operador binario negado, 
--- regresa la solución correspondiente
-auxMeteNeg :: Prop -> Prop
-auxMeteNeg TTrue = FFalse
-auxMeteNeg FFalse = TTrue
-auxMeteNeg (V p) = Neg (V p)
-auxMeteNeg (Neg p) = auxMeteNeg p
-auxMeteNeg (Conj p q) = Disy (meteNeg (Neg p)) (meteNeg (Neg q))
-auxMeteNeg (Disy p q) = Conj (meteNeg (Neg p)) (meteNeg (Neg q))
-auxMeteNeg (Imp p q) = Imp (meteNeg (Neg p)) (meteNeg (Neg q))
-auxMeteNeg (Equiv p q) = Equiv (meteNeg (Neg p)) (meteNeg (Neg q))
