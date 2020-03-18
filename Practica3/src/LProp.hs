@@ -116,9 +116,11 @@ meteNeg :: Prop -> Prop
 meteNeg TTrue = FFalse
 meteNeg FFalse = TTrue
 meteNeg (V p) = Neg (V p)
-meteNeg (Neg p) = p
-meteNeg (Conj p q) = Disy (meteNeg p) (meteNeg q)
-meteNeg (Disy p q) = Conj (meteNeg p) (meteNeg q)
+meteNeg (Neg p) = auxMeteNeg p
+meteNeg (Conj p q) = Conj (meteNeg p) (meteNeg q)
+meteNeg (Disy p q) = Disy (meteNeg p) (meteNeg q)
+meteNeg (Imp p q) = error "meteNeg(Imp _ _)"
+meteNeg (Equiv p q) = error "meteNeg(Equiv _ _)"
 
 
 -- | funcion que reciba una formula de la logica proposicional y devuelva una formula
@@ -144,3 +146,19 @@ dist (Equiv _ _) = error "dist(Equiv _ _): Fórmula no está en FNN"
 -- equivalente tal que este en forma normal conjuntiva,
 cnf :: Prop -> Prop
 cnf p = dist $ fnn p 
+
+-- ----------------------------------------------------------------------------
+-- Funciones auxiliares
+-- ----------------------------------------------------------------------------
+
+-- | Función auxiliar que dada una proposición con operador binario negado, 
+-- regresa la solución correspondiente
+auxMeteNeg :: Prop -> Prop
+auxMeteNeg TTrue = FFalse
+auxMeteNeg FFalse = TTrue
+auxMeteNeg (V p) = Neg (V p)
+auxMeteNeg (Neg p) = auxMeteNeg p
+auxMeteNeg (Conj p q) = Disy (meteNeg (Neg p)) (meteNeg (Neg q))
+auxMeteNeg (Disy p q) = Conj (meteNeg (Neg p)) (meteNeg (Neg q))
+auxMeteNeg (Imp p q) = error "auxMeteNeg(Imp _ _)"
+auxMeteNeg (Equiv p q) = error "auxMeteNeg(Equiv _ _)"
