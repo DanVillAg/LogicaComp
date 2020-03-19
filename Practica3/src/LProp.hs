@@ -117,7 +117,6 @@ meteNeg TTrue = FFalse
 meteNeg FFalse = TTrue
 meteNeg (V p) = Neg (V p)
 meteNeg (Neg p) = auxMeteNeg p
-meteNeg (Neg (Neg p)) = p
 meteNeg (Conj p q) = Conj (meteNeg p) (meteNeg q)
 meteNeg (Disy p q) = Disy (meteNeg p) (meteNeg q)
 meteNeg (Imp p q) = error "meteNeg(Imp _ _)"
@@ -163,3 +162,7 @@ auxMeteNeg (Conj p q) = Disy (meteNeg (Neg p)) (meteNeg (Neg q))
 auxMeteNeg (Disy p q) = Conj (meteNeg (Neg p)) (meteNeg (Neg q))
 auxMeteNeg (Imp p q) = error "auxMeteNeg(Imp _ _)"
 auxMeteNeg (Equiv p q) = error "auxMeteNeg(Equiv _ _)"
+
+-- | Función auxiliar que obtiene la negación de una función dada
+obtenNeg (Neg (V p)) = V p
+obtenNeg (V p)       = (Neg (V p))

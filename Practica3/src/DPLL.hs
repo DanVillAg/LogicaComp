@@ -44,15 +44,18 @@ elim (mod, form) = (mod, (literalNotInForm mod form))
 -- | Función que dada una Solucion regresa otra Solucion siguiendo la regla de
 --  la separación, si es posible, en otro caso regresa la Solucion de entrada.
 red :: Solucion -> Solucion
-red (mod, form) = (mod, (literalReducedInForm (map meteNeg mod) form))
+red (mod, form) = (mod, (literalReducedInForm (map obtenNeg mod) form))
 
 -- | Función que dada una Solucion regresa una lista de tipo Solucion siguiendo
 --  la regla de la separación, si es posible, en otro caso regresa la Solucion
 --  de entrada dentro de una lista.
 split :: Solucion -> [Solucion]
-split (mod, form) = [(splitMod, form) , (negSplitMod, form)] where
+split (mod, form) = if (length mod == length splitMod)
+                    then [(splitMod, form)]
+                    else [(splitMod, form), (negSplitMod, form)]
+    where
     splitMod =  literalAddSplitForm mod form
-    negSplitMod = meteNeg (head splitMod) : tail splitMod
+    negSplitMod = (Neg (head splitMod)) : tail splitMod
 
 -- |Función que para una Solucion dada regresa True si la cláusula vacía se 
 --  encuentra en la fórmula, regresa False en otro caso.
@@ -64,7 +67,7 @@ conflict (mod, form) = [] `elem` form
 success :: Solucion -> Bool
 success (mod, form) = null form
 
-
+--[V "p", V "r", V "q", V "s"] [[V "p", V "q"], [Neg (V "p"), V "r"],[V "q", Neg (V "r"), Neg (V "p"), V "s"]]
 -------------------------------------------------------------------------------
 --------Funciones Auxiliares---------------------------------------------------
 -------------------------------------------------------------------------------
@@ -72,7 +75,7 @@ success (mod, form) = null form
 -----AUXILIARES DE UNIT----------------
 -- | Función que dada una lista de clausulas unitarias retorna las cláusulas
 --   que su complemento no se encuentra en la misma lista
-complementNotIn xs ys = filter (\n -> not([(meteNeg (head n))] `elem` ys)) xs
+complementNotIn xs ys = filter (\n -> not([(obtenNeg (head n))] `elem` ys)) xs
 
 -- | Función que dada una lista de listas te retorna la lista de clausulas unitarias
 clausUnit xs = filter (\n -> length n == 1) xs
@@ -99,7 +102,10 @@ literalReducedInForm xs ys = map (\z -> (clausWithoutLiteral xs z)) ys
 -- | Función que dada una lista de literales y una clausula retorna la lista con 
 --   la aparicion de la primera literal nueva que se encuentre en la cláusula o 
 --   la misma lista si todas las literales de la cláusula ya son elem. de la lista
-literalAddNewElems xs (y:ys) = if not (y `elem` xs) then y:xs
+literalAddNewElems xs (y:ys) = if not (y `elem` xs) then (if checkForContradiction (y:xs)
+                                                          then y:xs
+                                                          else xs)
+    
                                 else (literalAddNewElems xs ys)
 literalAddNewElems xs _      = xs
 
@@ -109,4 +115,9 @@ literalAddNewElems xs _      = xs
 literalAddSplitForm xs (y:ys) = if (xs == (literalAddNewElems xs y))
                                 then literalAddSplitForm xs ys
                                 else literalAddNewElems xs y
-literalAddSplitForm xs _      = xs                  
+literalAddSplitForm xs _      = xs
+
+-- | Función que dada una lista de literales revisa que no exista la negación de
+--   alguna de estas literales en la lista, si existe la elimina, de otra forma 
+--   retorna la lista normal.
+checkForContradiction (x:xs) = not ((obtenNeg x) `elem` xs)
