@@ -11,7 +11,7 @@
 - Número de cuenta: 313616198
 - Correo: diego.a.villalpando@ciencias.unam.mx
 -}
-
+------DOOT DOOT
 
 module Practica1 where
 
